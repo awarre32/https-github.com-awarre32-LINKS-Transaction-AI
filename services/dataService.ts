@@ -1,3 +1,13 @@
+/**
+ * Data Service
+ * 
+ * Handles fetching transaction data from Google Cloud Storage.
+ * Strategy:
+ * 1. Attempt to fetch JSON files from the public bucket 'links-transaction-ai' via standard HTTP.
+ * 2. If successful, infer relationships (e.g., mapping Monday.com items to Deals).
+ * 3. If fetch fails (network/CORS), the DataContext will fallback to local mocks.
+ */
+
 import { ChecklistItem, DealRoadmap, DocumentData, MondayItem, TaskMap } from "../types";
 
 const BUCKET_NAME = 'links-transaction-ai';

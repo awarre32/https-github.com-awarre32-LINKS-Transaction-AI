@@ -11,6 +11,7 @@ interface AppData {
   monday: MondayItem[];
   loading: boolean;
   usingFallback: boolean;
+  lastSynced: Date | null;
   refreshData: () => Promise<void>;
 }
 
@@ -24,7 +25,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checklist: MOCK_CHECKLIST,
     monday: MOCK_MONDAY,
     loading: true,
-    usingFallback: false
+    usingFallback: false,
+    lastSynced: null as Date | null
   });
 
   const loadData = useCallback(async () => {
@@ -43,14 +45,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         checklist: fetched.checklist || [],
         monday: fetched.monday || [],
         loading: false,
-        usingFallback: false
+        usingFallback: false,
+        lastSynced: new Date()
       });
     } else {
       console.info("[Data Context] Remote data unavailable. Initializing with local datasets.");
       setState(prev => ({ 
         ...prev, 
         loading: false, 
-        usingFallback: true 
+        usingFallback: true,
+        lastSynced: new Date()
       }));
     }
   }, []);

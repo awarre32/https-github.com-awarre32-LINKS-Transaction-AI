@@ -11,7 +11,7 @@ import { LayoutDashboard, CheckSquare, FileText, Map, Zap, Menu, X, Loader2, Ref
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.DASHBOARD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { loading, usingFallback, refreshData } = useData();
+  const { loading, usingFallback, refreshData, lastSynced } = useData();
   const [refreshing, setRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -67,10 +67,15 @@ const AppContent: React.FC = () => {
         <div className="mt-auto pt-4 border-t border-white/10 text-xs text-gray-400">
           <p className="flex items-center gap-1 mb-1">
             <Globe className="w-3 h-3" />
-            <span className="truncate" title="Google Cloud Storage">Source: GCS Public Bucket</span>
+            <span className="truncate" title="Google Cloud Storage">Source: GCS Live</span>
           </p>
-          <p className="opacity-70 truncate">links-transaction-ai</p>
-          <p className="mt-1">v1.4 • Powered by Gemini</p>
+          <p className="opacity-70 truncate mb-1">links-transaction-ai</p>
+          {lastSynced && (
+            <p className="text-[10px] opacity-60 mb-2">
+              Synced: {lastSynced.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </p>
+          )}
+          <p className="mt-1">v1.5 • Powered by Gemini</p>
           
           {usingFallback && (
             <div className="mt-4 p-3 bg-red-900/30 rounded border border-red-500/50">
