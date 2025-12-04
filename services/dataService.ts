@@ -3,9 +3,9 @@
  * 
  * Handles fetching transaction data from Google Cloud Storage.
  * Strategy:
- * 1. Attempt to fetch JSON files from the public bucket 'links-transaction-ai' via standard HTTP.
- * 2. If successful, infer relationships (e.g., mapping Monday.com items to Deals).
- * 3. If fetch fails (network/CORS), the DataContext will fallback to local mocks.
+ * 1. Attempt to fetch via Direct Public URL (Standard).
+ * 2. If that fails (likely CORS), attempt via JSON API Endpoint.
+ * 3. Uses cache-busting to ensure fresh data.
  */
 
 import { ChecklistItem, DealRoadmap, DocumentData, MondayItem, TaskMap } from "../types";
@@ -13,39 +13,53 @@ import { ChecklistItem, DealRoadmap, DocumentData, MondayItem, TaskMap } from ".
 const BUCKET_NAME = 'links-transaction-ai';
 
 /**
- * Helper to fetch a single JSON file from the GCS bucket using the public direct URL.
- * Since the bucket is public, this is the most reliable method and avoids API key permission issues.
+ * Fetch with multiple strategies to handle CORS/Network issues.
  */
 const fetchGcsFile = async <T>(filename: string): Promise<T | null> => {
+  const cacheBuster = `?t=${new Date().getTime()}`;
+  
+  // Strategy 1: Direct Public URL
+  // Works best if Bucket is Public + CORS is configured.
+  const publicUrl = `https://storage.googleapis.com/${BUCKET_NAME}/${filename}${cacheBuster}`;
+  
+  // Strategy 2: JSON API
+  // Works best for some browser clients if Direct URL is blocked by strict CORS, 
+  // provided the object is public.
+  const apiUrl = `https://storage.googleapis.com/storage/v1/b/${BUCKET_NAME}/o/${filename}?alt=media&t=${new Date().getTime()}`;
+
   try {
-    // Direct public access URL
-    const url = `https://storage.googleapis.com/${BUCKET_NAME}/${filename}`;
-    
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      console.warn(`[GCS] Failed to fetch ${filename}. Status: ${response.status}`);
-      return null;
+    // Attempt Strategy 1
+    const response = await fetch(publicUrl);
+    if (response.ok) {
+      return await response.json();
     }
-    return await response.json();
-  } catch (error) {
-    console.warn(`[GCS] Network error fetching ${filename}`, error);
-    return null;
+    throw new Error(`Direct fetch failed: ${response.status}`);
+  } catch (directError) {
+    console.warn(`[GCS] Direct access failed for ${filename}, trying API endpoint...`, directError);
+    
+    try {
+      // Attempt Strategy 2
+      const apiResponse = await fetch(apiUrl);
+      if (apiResponse.ok) {
+        return await apiResponse.json();
+      }
+      console.warn(`[GCS] API access failed for ${filename}: ${apiResponse.status}`);
+    } catch (apiError) {
+      console.warn(`[GCS] All fetch strategies failed for ${filename}`, apiError);
+    }
   }
+
+  return null;
 };
 
 /**
  * Intelligent matching to associate a Site (Monday Item) with a Deal.
- * Matches keywords like "Rich's", "Slappy's", "Arcadia" from the Deal name to the Site name.
  */
 const mapMondayDeals = (mondayItems: MondayItem[], deals: DealRoadmap[]): MondayItem[] => {
   return mondayItems.map(item => {
-    // If already associated (e.g. from mock), keep it.
     if (item.deal_association) return item;
 
-    // Find best matching deal
     const matchedDeal = deals.find(deal => {
-      // Create keywords from deal name (e.g. "Rich's 7-Site Deal" -> "Rich's")
       const keywords = deal.deal_name.split(' ').filter(w => w.length > 3 && !w.includes('Site') && !w.includes('Deal'));
       return keywords.some(keyword => item.task.includes(keyword));
     });
@@ -57,22 +71,17 @@ const mapMondayDeals = (mondayItems: MondayItem[], deals: DealRoadmap[]): Monday
   });
 };
 
-/**
- * Main data fetching function.
- * Fetches all required JSON files in parallel from the GCS bucket.
- */
 export const fetchAllData = async () => {
-  // Default empty return structure
   const result = {
     roadmap: null as { deals: DealRoadmap[] } | null,
     taskStatus: null as TaskMap | null,
     documents: null as DocumentData[] | null,
     checklist: null as ChecklistItem[] | null,
-    monday: null as MondayItem[] | null
+    monday: null as MondayItem[] | null,
+    error: null as string | null
   };
 
   try {
-    // Fix: Inline the array in Promise.all so TypeScript infers it as a tuple, not an array of unions.
     const [roadmap, taskStatus, documents, checklist, monday] = await Promise.all([
       fetchGcsFile<{ deals: DealRoadmap[] }>('roadmap.json'),
       fetchGcsFile<TaskMap>('task_status.json'),
@@ -81,10 +90,14 @@ export const fetchAllData = async () => {
       fetchGcsFile<MondayItem[]>('monday_data.json'),
     ]);
 
-    // Process Monday data if available to add deal associations
     let processedMonday = monday;
     if (monday && roadmap) {
       processedMonday = mapMondayDeals(monday, roadmap.deals);
+    }
+
+    // Check if critical data is missing
+    if (!roadmap || !taskStatus) {
+      result.error = "Connection Failed: Could not load 'roadmap.json' or 'task_status.json'. check CORS settings.";
     }
 
     return {
@@ -92,16 +105,16 @@ export const fetchAllData = async () => {
       taskStatus,
       documents,
       checklist,
-      monday: processedMonday
+      monday: processedMonday,
+      error: result.error
     };
 
   } catch (error) {
-    console.error("[GCS] Error connecting to Google Cloud Storage:", error);
-    return result;
+    console.error("[GCS] Critical error fetching data:", error);
+    return { ...result, error: "Network Error" };
   }
 };
 
-// Legacy single fetcher (unused but kept for type safety if needed)
 export const fetchJson = async <T>(filename: string): Promise<T | null> => {
   return fetchGcsFile<T>(filename);
 };

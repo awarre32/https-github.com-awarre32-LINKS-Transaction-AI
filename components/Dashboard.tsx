@@ -2,10 +2,10 @@ import React from 'react';
 import { useData } from '../contexts/DataContext';
 import { TaskStatus } from '../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { AlertCircle, CheckCircle2, CircleDollarSign, Building2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, CircleDollarSign, Building2, WifiOff } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { roadmap, monday, taskStatus } = useData();
+  const { roadmap, monday, taskStatus, usingFallback, refreshData } = useData();
 
   // Calculations
   const totalDeals = roadmap.deals.length;
@@ -23,7 +23,6 @@ const Dashboard: React.FC = () => {
     const completed = dealTasks.filter(([, v]) => v.status === 'Completed').length;
     const remaining = dealTasks.filter(([, v]) => v.status !== 'Completed').length;
     
-    // If we have real data, use it. If tasks are empty (new deal), show placeholders or 0
     return {
       name: deal.deal_name.split(' ').slice(0, 2).join(' '), // Shorten name
       Completed: completed, 
@@ -37,6 +36,28 @@ const Dashboard: React.FC = () => {
         <h1 className="text-3xl font-bold text-[#0B3B2E]">Portfolio Dashboard</h1>
         <p className="text-gray-600">Real-time acquisition velocity and pipeline health.</p>
       </header>
+
+      {usingFallback && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex items-start gap-3">
+            <WifiOff className="text-red-500 w-6 h-6 mt-1 md:mt-0" />
+            <div>
+              <h3 className="text-red-800 font-bold">Using Mock/Offline Data</h3>
+              <p className="text-red-600 text-sm">
+                Could not connect to Google Cloud Storage. Displaying sample data instead.
+                <br />
+                <span className="text-xs opacity-75">Tip: Check bucket CORS configuration or file permissions.</span>
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => refreshData()}
+            className="px-4 py-2 bg-white text-red-600 border border-red-200 rounded font-medium text-sm hover:bg-red-50 transition-colors"
+          >
+            Retry Connection
+          </button>
+        </div>
+      )}
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
