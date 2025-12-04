@@ -1,0 +1,22 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        links: {
+          primary: '#006747',
+          dark: '#052e22',
+          light: '#F5F7FA',
+        }
+      }
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+}

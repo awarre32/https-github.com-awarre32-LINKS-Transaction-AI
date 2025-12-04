@@ -2,7 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import { DocumentData, DealRoadmap, TaskMap, ChecklistItem, MondayItem } from "../types";
 
 // Initialize the client
-const apiKey = process.env.API_KEY || '';
+// accessing via import.meta.env for Vite compatibility
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 interface ChatResponse {
@@ -23,6 +24,13 @@ interface AIContextData {
  */
 export const queryTransactionAI = async (userQuery: string, context: AIContextData): Promise<ChatResponse> => {
   try {
+    if (!apiKey) {
+      return {
+        text: "Configuration Error: VITE_GEMINI_API_KEY is missing. Please check your environment variables.",
+        evidence: []
+      };
+    }
+
     const { documents, taskStatus, roadmap, checklist, monday } = context;
 
     // 1. Retrieval Step (Keyword matching)
@@ -120,7 +128,7 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
 
     // 3. Call Gemini
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash', // Updated to latest flash model if available, or keep 1.5-flash
       contents: fullPrompt,
       config: {
         systemInstruction: systemInstruction,
@@ -137,7 +145,7 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
   } catch (error) {
     console.error("AI Service Error:", error);
     return {
-      text: "I encountered an error processing your request. Please check your network connection.",
+      text: "I encountered an error processing your request. Please check your network connection and API key.",
       evidence: []
     };
   }

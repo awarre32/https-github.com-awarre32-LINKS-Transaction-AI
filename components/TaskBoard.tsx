@@ -36,7 +36,7 @@ const TaskBoard: React.FC = () => {
   
   const getStatusColor = (status: string) => {
     switch(status) {
-      case 'Completed': return 'text-[#00A86B] bg-green-50';
+      case 'Completed': return 'text-[#006747] bg-green-50';
       case 'In Progress': return 'text-[#F4A024] bg-orange-50';
       case 'Not Started': return 'text-gray-400 bg-gray-50';
       default: return 'text-red-500 bg-red-50';
@@ -55,14 +55,14 @@ const TaskBoard: React.FC = () => {
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-[#0B3B2E]">Diligence & Operations</h1>
+          <h1 className="text-3xl font-bold text-[#006747]">Diligence & Operations</h1>
           <p className="text-gray-600">Track milestones from PSA to Integration.</p>
         </div>
         
-        <div className="flex items-center space-x-2 bg-white p-2 rounded shadow-sm border">
+        <div className="flex items-center space-x-2 bg-white p-2 rounded shadow-sm border border-gray-100">
           <Filter className="w-5 h-5 text-gray-500" />
           <select 
-            className="bg-transparent text-sm font-medium focus:outline-none text-[#0B3B2E]"
+            className="bg-transparent text-sm font-medium focus:outline-none text-[#006747]"
             value={selectedDeal}
             onChange={(e) => setSelectedDeal(e.target.value)}
           >
@@ -79,9 +79,9 @@ const TaskBoard: React.FC = () => {
             const phaseTasks = filteredTasks.filter(t => t.phase_code === phase || (phase === 'Ops' && t.phase_code.startsWith('Ops')));
             
             return (
-              <div key={phase} className="min-w-[300px] bg-white rounded-lg shadow-sm flex flex-col h-full border-t-4 border-[#0B3B2E]">
-                <div className="p-4 border-b">
-                  <h3 className="font-bold text-[#0B3B2E] text-lg">{phase} Phase</h3>
+              <div key={phase} className="min-w-[300px] bg-white rounded-lg shadow-sm flex flex-col h-full border-t-4 border-[#006747]">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="font-bold text-[#006747] text-lg">{phase} Phase</h3>
                   <div className="text-xs text-gray-500 mt-1 flex justify-between">
                     <span>{phaseTasks.length} Tasks</span>
                     <span>{phaseTasks.filter(t => t.status === 'Completed').length} Done</span>
@@ -93,7 +93,7 @@ const TaskBoard: React.FC = () => {
                     <div className="text-center py-8 text-gray-400 italic text-sm">No tasks tracked</div>
                   ) : (
                     phaseTasks.map((task, idx) => (
-                      <div key={idx} className="bg-white border rounded p-3 hover:shadow-md transition-shadow">
+                      <div key={idx} className="bg-white border border-gray-100 rounded p-3 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-2">
                           <span className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-medium ${getStatusColor(task.status)}`}>
                             {getStatusIcon(task.status)}
@@ -103,7 +103,7 @@ const TaskBoard: React.FC = () => {
                         </div>
                         <p className="text-sm font-medium text-gray-800 leading-tight mb-2">{task.task_name}</p>
                         {selectedDeal === 'All' && (
-                          <p className="text-xs text-[#0B3B2E] font-medium bg-gray-100 inline-block px-1 rounded">{task.deal_name}</p>
+                          <p className="text-xs text-[#006747] font-medium bg-gray-100 inline-block px-1 rounded">{task.deal_name}</p>
                         )}
                         {task.notes && (
                           <div className="mt-2 text-xs text-gray-500 italic border-l-2 border-[#F4A024] pl-2">

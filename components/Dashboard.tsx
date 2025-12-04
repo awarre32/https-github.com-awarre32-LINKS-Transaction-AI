@@ -33,7 +33,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-[#0B3B2E]">Portfolio Dashboard</h1>
+        <h1 className="text-3xl font-bold text-[#006747]">Portfolio Dashboard</h1>
         <p className="text-gray-600">Real-time acquisition velocity and pipeline health.</p>
       </header>
 
@@ -61,33 +61,33 @@ const Dashboard: React.FC = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#0B3B2E]">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#006747]">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500 font-medium">Active Deals</p>
-              <h3 className="text-3xl font-bold text-[#0B3B2E]">{totalDeals}</h3>
+              <h3 className="text-3xl font-bold text-[#006747]">{totalDeals}</h3>
             </div>
-            <Building2 className="text-[#F4A024] w-8 h-8" />
+            <Building2 className="text-[#006747] w-8 h-8 opacity-80" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#00A86B]">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#006747]">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500 font-medium">Sites (Active DD)</p>
-              <h3 className="text-3xl font-bold text-[#0B3B2E]">{sitesUnderContract}</h3>
+              <h3 className="text-3xl font-bold text-[#006747]">{sitesUnderContract}</h3>
             </div>
-            <CircleDollarSign className="text-[#00A86B] w-8 h-8" />
+            <CircleDollarSign className="text-[#006747] w-8 h-8 opacity-80" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#F4A024]">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-[#006747]">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500 font-medium">Open Tasks</p>
-              <h3 className="text-3xl font-bold text-[#0B3B2E]">{criticalPathTasks}</h3>
+              <h3 className="text-3xl font-bold text-[#006747]">{criticalPathTasks}</h3>
             </div>
-            <AlertCircle className="text-[#F4A024] w-8 h-8" />
+            <AlertCircle className="text-[#006747] w-8 h-8 opacity-80" />
           </div>
         </div>
 
@@ -95,9 +95,9 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500 font-medium">Next Closing</p>
-              <h3 className="text-lg font-bold text-[#0B3B2E] truncate w-32" title={closingSoon}>{closingSoon || 'None'}</h3>
+              <h3 className="text-lg font-bold text-[#006747] truncate w-32" title={closingSoon}>{closingSoon || 'None'}</h3>
             </div>
-            <CheckCircle2 className="text-gray-800 w-8 h-8" />
+            <CheckCircle2 className="text-gray-800 w-8 h-8 opacity-80" />
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
         
         {/* Chart Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm lg:col-span-2">
-          <h2 className="text-xl font-bold text-[#0B3B2E] mb-4">Task Completion by Deal</h2>
+          <h2 className="text-xl font-bold text-[#006747] mb-4">Task Completion by Deal</h2>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -118,12 +118,12 @@ const Dashboard: React.FC = () => {
                 <XAxis dataKey="name" stroke="#4B5563" />
                 <YAxis stroke="#4B5563" />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0B3B2E', color: '#fff', border: 'none', borderRadius: '4px' }}
-                  itemStyle={{ color: '#F4A024' }}
+                  contentStyle={{ backgroundColor: '#052e22', color: '#fff', border: 'none', borderRadius: '4px' }}
+                  itemStyle={{ color: '#fff' }}
                 />
                 <Legend />
-                <Bar dataKey="Completed" stackId="a" fill="#00A86B" radius={[0, 0, 4, 4]} />
-                <Bar dataKey="Remaining" stackId="a" fill="#0B3B2E" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Completed" stackId="a" fill="#006747" radius={[0, 0, 4, 4]} />
+                <Bar dataKey="Remaining" stackId="a" fill="#E5E7EB" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
 
         {/* Priority Feed */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-xl font-bold text-[#0B3B2E] mb-4">Critical Blockers</h2>
+          <h2 className="text-xl font-bold text-[#006747] mb-4">Critical Blockers</h2>
           <div className="space-y-4">
             {(Object.entries(taskStatus) as [string, TaskStatus][])
               .filter(([, val]) => val.status === 'In Progress' || val.status === 'Blocked')
@@ -139,9 +139,9 @@ const Dashboard: React.FC = () => {
               .map(([key, val], idx) => {
                 const [deal, phase, task] = key.split('_');
                 return (
-                  <div key={idx} className="p-3 bg-gray-50 rounded border-l-2 border-[#F4A024]">
+                  <div key={idx} className="p-3 bg-gray-50 rounded border-l-2 border-[#006747]">
                     <div className="flex justify-between items-start">
-                      <span className="text-xs font-bold text-[#0B3B2E] uppercase">{phase}</span>
+                      <span className="text-xs font-bold text-[#006747] uppercase">{phase}</span>
                       <span className="text-xs text-gray-500">{val.date}</span>
                     </div>
                     <p className="text-sm font-medium text-gray-800 mt-1">{task}</p>
@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
                 );
               })}
           </div>
-          <button className="w-full mt-4 py-2 text-sm font-medium text-[#00A86B] border border-[#00A86B] rounded hover:bg-[#00A86B] hover:text-white transition-colors">
+          <button className="w-full mt-4 py-2 text-sm font-medium text-[#006747] border border-[#006747] rounded hover:bg-[#006747] hover:text-white transition-colors">
             View All Tasks
           </button>
         </div>

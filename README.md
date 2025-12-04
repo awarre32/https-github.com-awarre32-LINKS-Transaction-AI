@@ -1,57 +1,101 @@
 # LINKS Transaction AI
 
-Internal acquisitions, diligence, and integration assistant for Links Car Wash. This application serves as a centralized "Deal Room" dashboard, visualizing the M&A pipeline and providing an AI-powered document search interface.
+A React + TypeScript application for managing M&A transactions, powered by Firebase and Gemini AI.
 
-## 🚀 Features
+## Branding
 
-- **Portfolio Dashboard**: Real-time visualization of active deals, sites under contract, and critical path blockers.
-- **Task & Diligence Tracker**: Kanban-style board for tracking standard acquisition phases (R-1 to Integration).
-- **Document AI (RAG)**: Retrieval-Augmented Generation chat interface using Google Gemini 2.5 Flash to answer questions about PSAs, ESAs, and Title Commitments.
-- **Integration Planning**: Standardized operational checklists mapped to active deals.
-- **Site Profiles**: Individual site tracking integrated with Monday.com data structures.
+This project uses the official **Links Car Wash** branding.
 
-## 🛠 Tech Stack
+### Brand Colors
+- **Primary Green:** `#006747` (Buttons, Headers, Accents)
+- **Dark Green:** `#052e22` (Sidebar, Dark Backgrounds)
+- **Background:** `#F5F7FA` (App Canvas)
+- **White:** `#FFFFFF` (Cards, Text on Green)
 
-- **Frontend**: React 19, TypeScript, Tailwind CSS
-- **Charts**: Recharts
-- **AI**: Google GenAI SDK (`gemini-2.5-flash`)
-- **Data Source**: Google Cloud Storage (Public Bucket) with Fallback to Local Mocks.
-- **Icons**: Lucide React
+### Assets
+Logos are stored in `src/assets/` and `public/`.
+- `links-logo.png` (Standard Color)
+- `links-logo-white.png` (White for dark backgrounds)
+- `links-logo-transparent.png` (High-res transparent)
 
-## 📂 Project Structure
+**Note:** Do not modify the logos or colors without checking the brand guidelines.
 
+## Architecture
+
+This project has been refactored to use **Firebase** as the single source of truth for all data, replacing the previous Google Cloud Storage (JSON) and GitHub integration.
+
+### Tech Stack
+- **Frontend:** React, Vite, TypeScript, Tailwind CSS
+- **Database:** Firebase Firestore (Real-time updates)
+- **AI:** Google Gemini (via Firebase Extension or direct API)
+- **State Management:** React Context (DataContext)
+
+### Data Sources
+All data is stored in Firestore collections:
+- `deals` (Roadmap)
+- `tasks` (Diligence & Closing tasks)
+- `documents` (VDR index)
+- `checklist` (Integration templates)
+- `sites` (Monday.com site list)
+
+## Setup & Configuration
+
+### 1. Environment Variables
+Create a `.env` file in the root directory (copy `.env.example` if available) and add your Firebase and Gemini credentials:
+
+```env
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+
+# Gemini AI
+VITE_GEMINI_API_KEY=your_gemini_api_key
+
+# Optional: Use Local Emulators
+# VITE_USE_EMULATOR=true
 ```
-/
-├── components/       # UI Components (Dashboard, TaskBoard, DocumentChat, etc.)
-├── contexts/         # React Context for global state (DataContext)
-├── services/         # External API integrations
-│   ├── dataService.ts   # Google Cloud Storage fetch logic
-│   └── geminiService.ts # Google Gemini AI interaction logic
-├── types.ts          # TypeScript interfaces for data models
-├── constants.ts      # Fallback mock data
-└── App.tsx           # Main application shell and routing
-```
 
-## 🔌 Data Architecture
-
-The application attempts to fetch live data from a public Google Cloud Storage bucket (`links-transaction-ai`) on startup.
-
-1.  **Live Mode**: Fetches `roadmap.json`, `task_status.json`, `documents.json`, etc., from GCS.
-2.  **Offline/Fallback Mode**: If the fetch fails (network error or CORS block), the app seamlessly switches to `constants.ts` (Mock Data) to ensure the UI remains functional.
-
-## 🤖 AI Integration
-
-The **Document Chat** uses a specialized RAG pipeline:
-1.  **Retrieval**: Filters the loaded `documents.json` and `task_status.json` based on user keywords.
-2.  **Context Injection**: Injects relevant text snippets and task notes into the Gemini prompt.
-3.  **Generation**: Uses `gemini-2.5-flash` to synthesize an answer with citations.
-
-## 📦 Setup
-
-1.  Ensure `process.env.API_KEY` is set with a valid Google GenAI API key.
-2.  Install dependencies and run the development server.
-
+### 2. Install Dependencies
 ```bash
 npm install
-npm start
 ```
+
+### 3. Run Development Server
+```bash
+npm run dev
+```
+
+### 4. Seed the Database
+When you first run the app, if your Firestore is empty, you will see a **"Seed Database"** button in the sidebar. Click it to populate Firestore with the initial mock data (deals, tasks, etc.).
+
+## Testing with Emulators
+
+1. Ensure you have the Firebase CLI installed (`npm install -g firebase-tools`).
+2. Run emulators:
+   ```bash
+   firebase emulators:start
+   ```
+3. In a separate terminal, run the app with emulator mode enabled:
+   ```bash
+   VITE_USE_EMULATOR=true npm run dev
+   ```
+
+## Folder Structure
+
+- `src/components`: UI components (Dashboard, TaskBoard, DocumentChat, etc.)
+- `src/contexts`: DataContext handling Firestore subscriptions.
+- `src/services`:
+  - `dataService.ts`: Firestore helper functions.
+  - `geminiService.ts`: AI logic.
+  - `seedService.ts`: Database seeding utility.
+- `src/types.ts`: TypeScript interfaces.
+
+## Migration Notes
+
+- **GCS Removed:** The app no longer fetches JSON files from Google Cloud Storage.
+- **GitHub Removed:** No Git logic exists in the client.
+- **Real-time:** Updates to Firestore are reflected immediately in the UI.
