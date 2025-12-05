@@ -12,6 +12,7 @@
     "export:json": "ts-node scripts/generate_json_from_firestore.ts"
   },
   "dependencies": {
+    "@google-cloud/bigquery": "^8.1.1",
     "@google/genai": "^1.31.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/typography": "^0.5.19",

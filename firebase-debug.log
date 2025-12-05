@@ -5705,3 +5705,113 @@ operable program or batch file.
 [info] 
 [info] Project Console: https://console.firebase.google.com/project/links-transaction-ai/overview
 [info] Hosting URL: https://links-transaction-ai.web.app
+[debug] [2025-12-05T04:32:28.406Z] ----------------------------------------------------------------------
+[debug] [2025-12-05T04:32:28.407Z] Command:       C:\Users\ANTHON~1\AppData\Local\Temp\node\node-v20.11.1-win-x64\node.exe c:\Users\AnthonyWarren\.gemini\antigravity\playground\nascent-protostar\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2025-12-05T04:32:28.407Z] CLI Version:   14.27.0
+[debug] [2025-12-05T04:32:28.407Z] Platform:      win32
+[debug] [2025-12-05T04:32:28.408Z] Node Version:  v20.11.1
+[debug] [2025-12-05T04:32:28.408Z] Time:          Thu Dec 04 2025 23:32:28 GMT-0500 (Eastern Standard Time)
+[debug] [2025-12-05T04:32:28.408Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-05T04:32:28.538Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-05T04:32:28.539Z] > authorizing via signed-in user (anthonymwarren@gmail.com)
+[debug] [2025-12-05T04:32:28.539Z] [iam] checking project links-transaction-ai for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-12-05T04:32:28.540Z] Checked if tokens are valid: false, expires at: 1764909679977
+[debug] [2025-12-05T04:32:28.540Z] Checked if tokens are valid: false, expires at: 1764909679977
+[debug] [2025-12-05T04:32:28.541Z] > refreshing access token with scopes: []
+[debug] [2025-12-05T04:32:28.542Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-12-05T04:32:28.542Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-05T04:32:28.697Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-12-05T04:32:28.697Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-05T04:32:28.709Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/links-transaction-ai:testIamPermissions [none]
+[debug] [2025-12-05T04:32:28.709Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/links-transaction-ai:testIamPermissions x-goog-quota-user=projects/links-transaction-ai
+[debug] [2025-12-05T04:32:28.710Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/links-transaction-ai:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-12-05T04:32:28.830Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/links-transaction-ai:testIamPermissions 200
+[debug] [2025-12-05T04:32:28.830Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/links-transaction-ai:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-12-05T04:32:28.830Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:28.831Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:28.831Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/links-transaction-ai [none]
+[debug] [2025-12-05T04:32:29.125Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/links-transaction-ai 200
+[debug] [2025-12-05T04:32:29.125Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/links-transaction-ai {"projectId":"links-transaction-ai","projectNumber":"447604239474","displayName":"Links Transaction AI","name":"projects/links-transaction-ai","resources":{"hostingSite":"links-transaction-ai"},"state":"ACTIVE","etag":"1_0b95cd4b-3580-4988-9ed4-b15d139b33e0"}
+[info] 
+[info] === Deploying to 'links-transaction-ai'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2025-12-05T04:32:29.128Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.128Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.128Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions [none]
+[debug] [2025-12-05T04:32:29.128Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-12-05T04:32:29.679Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions 200
+[debug] [2025-12-05T04:32:29.679Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions {"name":"projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[links-transaction-ai]: beginning deploy... 
+[info] i  hosting[links-transaction-ai]: found 10 files in dist 
+[debug] [2025-12-05T04:32:29.688Z] [hosting] uploading with 200 concurrency
+[debug] [2025-12-05T04:32:29.721Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.721Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.721Z] [hosting] hash cache [ZGlzdA] stored for 10 files
+[debug] [2025-12-05T04:32:29.722Z] [hosting][hash queue][FINAL] {"max":31,"min":1,"avg":4.2,"active":0,"complete":10,"success":10,"errored":0,"retried":0,"total":10,"elapsed":34}
+[debug] [2025-12-05T04:32:29.722Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad:populateFiles [none]
+[debug] [2025-12-05T04:32:29.722Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad:populateFiles {"files":{"/logo-links.png":"bdb2791fb1f641932b4a87ca577113902f981ccdd9eb76061fe783a2e85f126f","/favicon.ico":"bdb2791fb1f641932b4a87ca577113902f981ccdd9eb76061fe783a2e85f126f","/data/task_status.json":"955ff0e9ae156b2f51acb81614c8f086acec03183f7aad0bc881070a0b763823","/data/roadmap.json":"8daed913b4849f3a940e3f5ca328139019830473ef46bd63837e716c3b394f29","/data/monday_data.json":"64271d53da281ab3d6a93bb9e71d10ba6fa7089a5ac5d0de073e4b4d263ebd4f","/data/documents.json":"28db80275d65aeef5577379e3b36c8cfaa3e5ef8d103ac97cd55d47aac21a5d6","/data/checklist_data.json":"e2ef431341cc1ddcf39451426a53d1060669ccfdef70e5a49bc94975490a9fa2","/index.html":"3059440a321e9ebf6c94c1b9fd8a74dbb5358e7c9c379fe960000b926e6e6861","/assets/index-BqvtuBwS.css":"a29c6763cea7f4e956100a6d2d4851dd866b4bf0e058e77864ebda73bb3b256a","/assets/index-DNLjpjGr.js":"327da85720ec4c4f32afc83c4437b7f49294f4e8c7ff38c9dd6d31e56990afa3"}}
+[debug] [2025-12-05T04:32:29.866Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad:populateFiles 200
+[debug] [2025-12-05T04:32:29.866Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad:populateFiles {"uploadRequiredHashes":["3059440a321e9ebf6c94c1b9fd8a74dbb5358e7c9c379fe960000b926e6e6861","327da85720ec4c4f32afc83c4437b7f49294f4e8c7ff38c9dd6d31e56990afa3"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files"}
+[debug] [2025-12-05T04:32:29.867Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.867Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.867Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.867Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:29.867Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/3059440a321e9ebf6c94c1b9fd8a74dbb5358e7c9c379fe960000b926e6e6861 [none]
+[debug] [2025-12-05T04:32:29.867Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/3059440a321e9ebf6c94c1b9fd8a74dbb5358e7c9c379fe960000b926e6e6861 [stream]
+[debug] [2025-12-05T04:32:29.868Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/327da85720ec4c4f32afc83c4437b7f49294f4e8c7ff38c9dd6d31e56990afa3 [none]
+[debug] [2025-12-05T04:32:29.868Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/327da85720ec4c4f32afc83c4437b7f49294f4e8c7ff38c9dd6d31e56990afa3 [stream]
+[debug] [2025-12-05T04:32:29.869Z] [hosting][populate queue][FINAL] {"max":146,"min":146,"avg":146,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":148}
+[debug] [2025-12-05T04:32:29.869Z] [hosting] uploads queued: 2
+[debug] [2025-12-05T04:32:30.738Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/327da85720ec4c4f32afc83c4437b7f49294f4e8c7ff38c9dd6d31e56990afa3 200
+[debug] [2025-12-05T04:32:30.738Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/327da85720ec4c4f32afc83c4437b7f49294f4e8c7ff38c9dd6d31e56990afa3 [stream]
+[debug] [2025-12-05T04:32:30.847Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/3059440a321e9ebf6c94c1b9fd8a74dbb5358e7c9c379fe960000b926e6e6861 200
+[debug] [2025-12-05T04:32:30.847Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/links-transaction-ai/versions/ce8e8baf4021f6ad/files/3059440a321e9ebf6c94c1b9fd8a74dbb5358e7c9c379fe960000b926e6e6861 [stream]
+[debug] [2025-12-05T04:32:30.847Z] [hosting][upload queue][FINAL] {"max":980,"min":871,"avg":925.5,"active":0,"complete":2,"success":2,"errored":0,"retried":0,"total":2,"elapsed":980}
+[info] i  hosting: upload complete 
+[info] +  hosting[links-transaction-ai]: file upload complete 
+[debug] [2025-12-05T04:32:30.847Z] [hosting] deploy completed after 1167ms
+[debug] [2025-12-05T04:32:30.847Z] [
+  {
+    "config": {
+      "public": "dist",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "site": "links-transaction-ai"
+    },
+    "version": "projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad"
+  }
+]
+[info] i  hosting[links-transaction-ai]: finalizing version... 
+[debug] [2025-12-05T04:32:30.848Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:30.848Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:30.849Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions/ce8e8baf4021f6ad updateMask=status%2Cconfig
+[debug] [2025-12-05T04:32:30.849Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions/ce8e8baf4021f6ad {"status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]}}
+[debug] [2025-12-05T04:32:31.039Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions/ce8e8baf4021f6ad 200
+[debug] [2025-12-05T04:32:31.039Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/versions/ce8e8baf4021f6ad {"name":"projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2025-12-05T04:32:29.261858Z","createUser":{"email":"anthonymwarren@gmail.com"},"finalizeTime":"2025-12-05T04:32:30.851511Z","finalizeUser":{"email":"anthonymwarren@gmail.com"}}
+[debug] [2025-12-05T04:32:31.039Z] [hosting] finalized version for links-transaction-ai:[object Object]
+[info] +  hosting[links-transaction-ai]: version finalized 
+[info] i  hosting[links-transaction-ai]: releasing new version... 
+[debug] [2025-12-05T04:32:31.039Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:31.040Z] Checked if tokens are valid: true, expires at: 1764912747697
+[debug] [2025-12-05T04:32:31.040Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/channels/live/releases versionName=projects%2F447604239474%2Fsites%2Flinks-transaction-ai%2Fversions%2Fce8e8baf4021f6ad
+[debug] [2025-12-05T04:32:31.040Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/channels/live/releases {}
+[debug] [2025-12-05T04:32:31.200Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/channels/live/releases 200
+[debug] [2025-12-05T04:32:31.200Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/links-transaction-ai/channels/live/releases {"name":"projects/447604239474/sites/links-transaction-ai/channels/live/releases/1764909150464000","version":{"name":"projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2025-12-05T04:32:29.261858Z","createUser":{"email":"anthonymwarren@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLFgBKtEq18vcxw-QKpuobL5gyqsT1FCf8Z3R1XAjBgsUrouA=mo"},"finalizeTime":"2025-12-05T04:32:30.851511Z","finalizeUser":{"email":"anthonymwarren@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLFgBKtEq18vcxw-QKpuobL5gyqsT1FCf8Z3R1XAjBgsUrouA=mo"}},"type":"DEPLOY","releaseTime":"2025-12-05T04:32:30.464Z","releaseUser":{"email":"anthonymwarren@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLFgBKtEq18vcxw-QKpuobL5gyqsT1FCf8Z3R1XAjBgsUrouA=mo"}}
+[debug] [2025-12-05T04:32:31.200Z] [hosting] release: {"name":"projects/447604239474/sites/links-transaction-ai/channels/live/releases/1764909150464000","version":{"name":"projects/447604239474/sites/links-transaction-ai/versions/ce8e8baf4021f6ad","status":"FINALIZED","config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2025-12-05T04:32:29.261858Z","createUser":{"email":"anthonymwarren@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLFgBKtEq18vcxw-QKpuobL5gyqsT1FCf8Z3R1XAjBgsUrouA=mo"},"finalizeTime":"2025-12-05T04:32:30.851511Z","finalizeUser":{"email":"anthonymwarren@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLFgBKtEq18vcxw-QKpuobL5gyqsT1FCf8Z3R1XAjBgsUrouA=mo"}},"type":"DEPLOY","releaseTime":"2025-12-05T04:32:30.464Z","releaseUser":{"email":"anthonymwarren@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocLFgBKtEq18vcxw-QKpuobL5gyqsT1FCf8Z3R1XAjBgsUrouA=mo"}}
+[info] +  hosting[links-transaction-ai]: release complete 
+[info] 
+[info] +  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/links-transaction-ai/overview
+[info] Hosting URL: https://links-transaction-ai.web.app

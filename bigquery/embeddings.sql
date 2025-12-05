@@ -1,38 +1,29 @@
--- Embedding generation using BigQuery AI functions.
--- Ensure the "Text embedding" model is enabled for the project.
--- Dataset: links-transaction-ai.links_transactions
 
--- Document embeddings (semantic search over metadata/snippets)
-CREATE OR REPLACE TABLE `links-transaction-ai.links_transactions.document_embeddings`
-PARTITION BY DATE(uploaded_at)
-CLUSTER BY deal, doc_type AS
+-- 1. Document Embeddings
+CREATE OR REPLACE TABLE `links_transactions.document_embeddings` AS
 SELECT
-  doc_id,
-  deal,
-  doc_type,
-  summary,
-  text_snippet,
-  uploaded_at,
-  AI.GENERATE_EMBEDDING(
-    MODEL => 'text-embedding-004',
-    TEXT => CONCAT(COALESCE(summary, ''), '\n', COALESCE(text_snippet, ''))
+  d.doc_id,
+  d.deal,
+  d.doc_type,
+  d.summary,
+  d.text_snippet,
+  ML.GENERATE_EMBEDDING(
+    MODEL `links_transactions.embedding_model`,
+    (d.summary || '\n' || d.text_snippet)
   ).embedding AS embedding
-FROM `links-transaction-ai.links_transactions.documents_snapshot`
-WHERE summary IS NOT NULL OR text_snippet IS NOT NULL;
+FROM `links_transactions.documents_snapshot` d
+WHERE d.summary IS NOT NULL;
 
--- Task embeddings (optional, for blockage prediction + semantic search)
-CREATE OR REPLACE TABLE `links-transaction-ai.links_transactions.task_embeddings`
-PARTITION BY DATE(updated_at)
-CLUSTER BY deal_name, department AS
+-- 2. Task Embeddings
+CREATE OR REPLACE TABLE `links_transactions.task_embeddings` AS
 SELECT
   task_id,
   deal_name,
   department,
-  status,
-  updated_at,
-  text_description,
-  AI.GENERATE_EMBEDDING(
-    MODEL => 'text-embedding-004',
-    TEXT => text_description
+  notes AS text,
+  ML.GENERATE_EMBEDDING(
+    MODEL `links_transactions.embedding_model`,
+    notes
   ).embedding AS embedding
-FROM `links-transaction-ai.links_transactions.task_features`;
+FROM `links_transactions.tasks_snapshot`
+WHERE notes IS NOT NULL;

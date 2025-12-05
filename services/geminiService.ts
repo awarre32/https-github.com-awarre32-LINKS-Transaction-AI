@@ -38,7 +38,7 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
     // 1. Retrieval Step (Keyword matching)
     const lowerQuery = userQuery.toLowerCase();
     const queryTerms = lowerQuery.split(' ').filter(term => term.length > 3); // Simple term extraction
-    
+
     // A. Filter Documents (VDR)
     const docScore = (doc: DocumentData) => {
       const docStr = `${doc.filename} ${doc.deal || ''} ${doc.summary} ${doc.text_snippet}`.toLowerCase();
@@ -57,13 +57,13 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
 
     // B. Retrieve Task Context (Diligence/Closing/Ops)
     const relevantTasks = Object.entries(taskStatus)
-        .filter(([key, val]) => {
-          if (currentDealFilter !== 'All' && !key.startsWith(currentDealFilter)) return false;
-          if (currentDeptView !== 'All' && (val.department || 'Other') !== currentDeptView) return false;
-          return key.toLowerCase().includes(lowerQuery) || queryTerms.some(term => key.toLowerCase().includes(term));
-        })
-        .map(([key, val]) => `- ${key}: ${val.status} (Date: ${val.date}) ${val.notes ? `[Note: ${val.notes}]` : ''}`)
-        .slice(0, 15);
+      .filter(([key, val]) => {
+        if (currentDealFilter !== 'All' && !key.startsWith(currentDealFilter)) return false;
+        if (currentDeptView !== 'All' && (val.department || 'Other') !== currentDeptView) return false;
+        return key.toLowerCase().includes(lowerQuery) || queryTerms.some(term => key.toLowerCase().includes(term));
+      })
+      .map(([key, val]) => `- ${key}: ${val.status} (Date: ${val.date}) ${val.notes ? `[Note: ${val.notes}]` : ''}`)
+      .slice(0, 15);
 
     // C. Retrieve Site Profiles (Monday.com)
     const relevantSites = monday
@@ -74,12 +74,12 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
     // D. Retrieve Integration Templates (Checklist)
     // If the user asks about "integration", "ops", "equipment", "signage", include relevant template items
     const relevantTemplates = checklist
-      .filter(item => 
-        item.task.toLowerCase().includes(lowerQuery) || 
-        item.category.toLowerCase().includes(lowerQuery) ||
+      .filter(item =>
+        item.task.toLowerCase().includes(lowerQuery) ||
+        (item.category && item.category.toLowerCase().includes(lowerQuery)) ||
         lowerQuery.includes('integration') || lowerQuery.includes('plan')
       )
-      .map(item => `- [Template] ${item.category}: ${item.task} (Priority: ${item.priority})`)
+      .map(item => `- [Template] ${item.category || 'General'}: ${item.task} (Priority: ${item.priority})`)
       .slice(0, 10);
 
     // 2. Construct System Instruction & Prompt
