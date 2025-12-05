@@ -17,12 +17,16 @@ const mapDealStatus = (status?: string) => {
 
 const ensureRuntimeAuth = async () => {
   if (!preferFirestore) return;
+  // Auth is optional for public reads. Skipping ensureAuth to avoid configuration-not-found errors if Auth is disabled.
+  return;
+  /*
   try {
     await ensureAuth();
   } catch (err) {
     // Don't block reads if auth isn't available; Firestore rules allow public reads.
     console.warn('Auth optional: continuing without sign-in', err);
   }
+  */
 };
 
 // 1. Roadmap / Deals
