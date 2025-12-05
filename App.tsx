@@ -6,7 +6,7 @@ import DocumentChat from './components/DocumentChat';
 import SiteList from './components/SiteList';
 import Integration from './components/Integration';
 import { DataProvider, useData } from './contexts/DataContext';
-import { LayoutDashboard, CheckSquare, FileText, Map, Zap, Menu, X, Loader2, RefreshCw, Globe, AlertTriangle, Database } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, FileText, Map, Zap, Menu, X, Loader2, Globe, AlertTriangle } from 'lucide-react';
 // import linksLogoWhite from '/logo-links.png'; // Fallback to public folder path for testing or if import fails
 
 // Fix for image import issue: Use the file we put in src/assets if possible, 
@@ -16,29 +16,38 @@ import { LayoutDashboard, CheckSquare, FileText, Map, Zap, Menu, X, Loader2, Ref
 // We copied src/assets/links-logo.png to public/logo-links.png earlier.
 const LOGO_SRC = "/logo-links.png";
 
+interface NavItemProps {
+  view: AppView;
+  icon: React.ElementType;
+  label: string;
+  currentView: AppView;
+  setCurrentView: (view: AppView) => void;
+  setMobileMenuOpen: (open: boolean) => void;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ view, icon: Icon, label, currentView, setCurrentView, setMobileMenuOpen }) => (
+  <button
+    onClick={() => {
+      setCurrentView(view);
+      setMobileMenuOpen(false);
+    }}
+    className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all ${currentView === view
+      ? 'bg-[#006747] text-white shadow-md'
+      : 'text-gray-300 hover:bg-[#052e22]/50 hover:text-white'
+      }`}
+  >
+    <Icon className="w-5 h-5" />
+    <span className="font-medium">{label}</span>
+  </button>
+);
+
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.DASHBOARD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { loading, roadmap, seedData, lastSynced, currentDeptView, setCurrentDeptView, currentDealFilter, setCurrentDealFilter } = useData();
-  const [refreshing, setRefreshing] = useState(false);
+  const { loading, roadmap, lastSynced, currentDeptView, setCurrentDeptView, currentDealFilter, setCurrentDealFilter } = useData();
+  const [refreshing] = useState(false);
 
   // Auto-seed effect removed per user request
-
-  const NavItem = ({ view, icon: Icon, label }: { view: AppView, icon: React.ElementType, label: string }) => (
-    <button
-      onClick={() => {
-        setCurrentView(view);
-        setMobileMenuOpen(false);
-      }}
-      className={`flex items-center space-x-3 w-full p-3 rounded-lg transition-all ${currentView === view
-          ? 'bg-[#006747] text-white shadow-md'
-          : 'text-gray-300 hover:bg-[#052e22]/50 hover:text-white'
-        }`}
-    >
-      <Icon className="w-5 h-5" />
-      <span className="font-medium">{label}</span>
-    </button>
-  );
 
   if (loading && !refreshing) {
     return (
@@ -65,11 +74,11 @@ const AppContent: React.FC = () => {
         </div>
 
         <nav className="space-y-2 flex-1">
-          <NavItem view={AppView.DASHBOARD} icon={LayoutDashboard} label="Dashboard" />
-          <NavItem view={AppView.TASKS} icon={CheckSquare} label="Tasks & Diligence" />
-          <NavItem view={AppView.DOCUMENTS} icon={FileText} label="Document AI" />
-          <NavItem view={AppView.SITES} icon={Map} label="Sites" />
-          <NavItem view={AppView.INTEGRATION} icon={Zap} label="Integration" />
+          <NavItem view={AppView.DASHBOARD} icon={LayoutDashboard} label="Dashboard" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.TASKS} icon={CheckSquare} label="Tasks & Diligence" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.DOCUMENTS} icon={FileText} label="Document AI" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.SITES} icon={Map} label="Sites" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.INTEGRATION} icon={Zap} label="Integration" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
         </nav>
 
         <div className="mt-auto pt-4 border-t border-white/10 text-xs text-gray-400">
@@ -110,11 +119,11 @@ const AppContent: React.FC = () => {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-[#052e22] z-20 pt-20 p-4 space-y-2 md:hidden">
-          <NavItem view={AppView.DASHBOARD} icon={LayoutDashboard} label="Dashboard" />
-          <NavItem view={AppView.TASKS} icon={CheckSquare} label="Tasks & Diligence" />
-          <NavItem view={AppView.DOCUMENTS} icon={FileText} label="Document AI" />
-          <NavItem view={AppView.SITES} icon={Map} label="Sites" />
-          <NavItem view={AppView.INTEGRATION} icon={Zap} label="Integration" />
+          <NavItem view={AppView.DASHBOARD} icon={LayoutDashboard} label="Dashboard" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.TASKS} icon={CheckSquare} label="Tasks & Diligence" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.DOCUMENTS} icon={FileText} label="Document AI" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.SITES} icon={Map} label="Sites" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
+          <NavItem view={AppView.INTEGRATION} icon={Zap} label="Integration" currentView={currentView} setCurrentView={setCurrentView} setMobileMenuOpen={setMobileMenuOpen} />
         </div>
       )}
 
@@ -127,6 +136,7 @@ const AppContent: React.FC = () => {
               <select
                 className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm text-gray-700"
                 value={currentDeptView}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange={(e) => setCurrentDeptView(e.target.value as any)}
               >
                 {['All', 'Exec', 'Ops', 'Legal', 'Finance', 'HR', 'Dev', 'Other'].map(opt => (
@@ -139,6 +149,7 @@ const AppContent: React.FC = () => {
               <select
                 className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm text-gray-700 min-w-[200px]"
                 value={currentDealFilter}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange={(e) => setCurrentDealFilter(e.target.value as any)}
               >
                 <option value="All">All Deals</option>

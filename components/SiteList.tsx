@@ -1,6 +1,6 @@
 import React from 'react';
 import { useData } from '../contexts/DataContext';
-import { MapPin, Calendar, AlertCircle } from 'lucide-react';
+import { MapPin, Calendar } from 'lucide-react';
 import { MondayItem, TaskStatus } from '../types';
 
 const SiteList: React.FC = () => {

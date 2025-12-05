@@ -2,11 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { useData } from '../contexts/DataContext';
 import { TaskStatus } from '../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { AlertCircle, CheckCircle2, CircleDollarSign, Building2, WifiOff, AlertTriangle, Activity, Clock4 } from 'lucide-react';
+import { CheckCircle2, CircleDollarSign, Building2, WifiOff, AlertTriangle, Activity, Clock4 } from 'lucide-react';
 import { runDealTool } from '../services/geminiService';
+import KpiCard from './KpiCard';
 
 const Dashboard: React.FC = () => {
-  const { roadmap, monday, taskStatus, usingFallback, refreshData, currentDeptView } = useData();
+  const { roadmap, monday, taskStatus, checklist, usingFallback, refreshData, currentDeptView } = useData();
   const [aiResults, setAiResults] = useState<Record<string, { text: string; loading: boolean }>>({});
   const tasksByDeal = useMemo(() => {
     const map: Record<string, TaskStatus[]> = {};
@@ -52,6 +53,7 @@ const Dashboard: React.FC = () => {
     const remaining = dealTasks.filter(([, v]) => v.status !== 'Completed').length;
 
     return {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       name: `${(deal.deal_name || '').split(' ').slice(0, 2).join(' ')} ${(deal as any).risk_score ? `(Risk: ${(deal as any).risk_score})` : ''}`,
       Completed: completed,
       Remaining: remaining
@@ -164,8 +166,17 @@ const Dashboard: React.FC = () => {
                   <button
                     onClick={async () => {
                       setAiResults(prev => ({ ...prev, [d.deal.deal_name]: { text: 'Analyzing...', loading: true } }));
-                      const res = await runDealTool('risk_analysis', { deal_name: d.deal.deal_name });
-                      setAiResults(prev => ({ ...prev, [d.deal.deal_name]: { text: res, loading: false } }));
+                      // Context construction for AI
+                      const context = {
+                        roadmap: { deals: roadmap.deals },
+                        taskStatus,
+                        documents: [], // Optimization: Don't pass all docs if not needed, or pass filtered
+                        checklist,
+                        monday,
+                        currentDeptView
+                      };
+                      const res = await runDealTool('risk_analysis', d.deal.deal_name, context);
+                      setAiResults(prev => ({ ...prev, [d.deal.deal_name]: { text: res.text, loading: false } }));
                     }}
                     className="text-xs bg-indigo-50 text-indigo-600 px-2 py-1 rounded hover:bg-indigo-100 transition-colors"
                   >
@@ -186,17 +197,5 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
-
-const KpiCard: React.FC<{ label: string; value: string | number; icon: React.ReactNode }> = ({ label, value, icon }) => (
-  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
-    <div>
-      <p className="text-sm font-medium text-gray-500 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-gray-800">{value}</p>
-    </div>
-    <div className="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
-      {icon}
-    </div>
-  </div>
-);
 
 export default Dashboard;
