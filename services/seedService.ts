@@ -1,5 +1,5 @@
 import { db } from "../firebaseConfig";
-import { collection, doc, writeBatch, setDoc } from "firebase/firestore";
+import { collection, doc, writeBatch } from "firebase/firestore";
 import { MOCK_ROADMAP, MOCK_TASK_STATUS, MOCK_DOCUMENTS, MOCK_CHECKLIST, MOCK_MONDAY } from "../constants";
 
 export const seedDatabase = async () => {
@@ -27,7 +27,7 @@ export const seedDatabase = async () => {
       // The separator seems to be "_" but deal names contain spaces.
       // We will store the original ID as the document ID to maintain reference integrity for now.
       
-      const parts = key.split('_');
+      // const parts = key.split('_');
       // A simple heuristic parsing if needed, but for now we trust the key is the ID.
       // We can add parsed fields for querying.
       

@@ -175,12 +175,14 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
 export type DealTool =
   | 'verifyTitle'
   | 'summarizeESA'
-  | 'missingDocs';
+  | 'missingDocs'
+  | 'risk_analysis';
 
 const toolPrompts: Record<DealTool, string> = {
   verifyTitle: "Verify title commitments and list exceptions or gaps.",
   summarizeESA: "Summarize environmental/ESA findings and flag issues.",
-  missingDocs: "List missing or critical documents for this deal (PSA, title, survey, ESA, financials)."
+  missingDocs: "List missing or critical documents for this deal (PSA, title, survey, ESA, financials).",
+  risk_analysis: "Analyze the overall risk profile of this deal considering diligence findings, task blockers, and missing documents."
 };
 
 /**
