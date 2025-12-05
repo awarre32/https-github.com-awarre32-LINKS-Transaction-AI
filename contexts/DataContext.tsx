@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
-import { ChecklistItem, DealRoadmap, DocumentData, MondayItem, TaskMap } from '../types';
-import { 
-  subscribeToChecklist, 
-  subscribeToDeals, 
-  subscribeToDocuments, 
-  subscribeToSites, 
-  subscribeToTasks 
+import { ChecklistItem, DealRoadmap, DocumentData, MondayItem, TaskMap, TaskStatus, DepartmentView } from '../types';
+import {
+  subscribeToChecklist,
+  subscribeToDeals,
+  subscribeToDocuments,
+  subscribeToSites,
+  subscribeToTasks,
+  setTaskStatus as persistTaskStatus
 } from '../services/dataService';
 import { seedDatabase } from '../services/seedService';
 
@@ -20,6 +21,11 @@ interface AppData {
   lastSynced: Date | null;
   refreshData: () => Promise<void>; // Kept for compatibility
   seedData: () => Promise<void>;
+  updateTaskStatus: (key: string, status: TaskStatus['status']) => void;
+  currentDeptView: DepartmentView;
+  setCurrentDeptView: (dept: DepartmentView) => void;
+  currentDealFilter: string | 'All';
+  setCurrentDealFilter: (deal: string | 'All') => void;
 }
 
 const DataContext = createContext<AppData | undefined>(undefined);
@@ -32,7 +38,8 @@ const mapMondayDeals = (mondayItems: MondayItem[], deals: DealRoadmap[]): Monday
     if (item.deal_association) return item;
 
     const matchedDeal = deals.find(deal => {
-      const keywords = deal.deal_name.split(' ').filter(w => w.length > 3 && !w.includes('Site') && !w.includes('Deal'));
+      const dealName = deal.deal_name || '';
+      const keywords = dealName.split(' ').filter(w => w.length > 3 && !w.includes('Site') && !w.includes('Deal'));
       return keywords.some(keyword => item.task.includes(keyword));
     });
 
@@ -43,27 +50,38 @@ const mapMondayDeals = (mondayItems: MondayItem[], deals: DealRoadmap[]): Monday
   });
 };
 
+const deriveDealNamesFromTasks = (taskStatus: TaskMap): string[] => {
+  const names = new Set<string>();
+  Object.keys(taskStatus).forEach(key => {
+    const parts = key.split('_');
+    if (parts[0]) names.add(parts[0]);
+  });
+  return Array.from(names);
+};
+
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [deals, setDeals] = useState<DealRoadmap[]>([]);
-  const [taskStatus, setTaskStatus] = useState<TaskMap>({});
+  const [taskStatus, setTaskState] = useState<TaskMap>({});
   const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
   const [rawMonday, setRawMonday] = useState<MondayItem[]>([]);
-  
+
   const [loading, setLoading] = useState(true);
   const [lastSynced, setLastSynced] = useState<Date | null>(null);
+  const [currentDeptView, setCurrentDeptView] = useState<DepartmentView>('All');
+  const [currentDealFilter, setCurrentDealFilter] = useState<string | 'All'>('All');
 
   // Subscribe to real-time updates
   useEffect(() => {
     setLoading(true);
-    
+
     const unsubDeals = subscribeToDeals((data) => {
       setDeals(data);
       setLastSynced(new Date());
     });
-    
+
     const unsubTasks = subscribeToTasks((data) => {
-      setTaskStatus(data);
+      setTaskState(data);
     });
 
     const unsubDocs = subscribeToDocuments((data) => {
@@ -94,10 +112,28 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  // Merge deal names seen in tasks so filters/metrics include everything present in the data files
+  const mergedDeals: DealRoadmap[] = useMemo(() => {
+    const map = new Map<string, DealRoadmap>();
+    deals.forEach(d => map.set(d.deal_name, d));
+
+    deriveDealNamesFromTasks(taskStatus).forEach(name => {
+      if (!map.has(name)) {
+        map.set(name, {
+          deal_name: name,
+          status: 'Diligence',
+          closing_date: ''
+        });
+      }
+    });
+
+    return Array.from(map.values());
+  }, [deals, taskStatus]);
+
   // Computed Monday items with deal associations
   const monday = useMemo(() => {
-    return mapMondayDeals(rawMonday, deals);
-  }, [rawMonday, deals]);
+    return mapMondayDeals(rawMonday, mergedDeals);
+  }, [rawMonday, mergedDeals]);
 
   const handleSeed = async () => {
     setLoading(true);
@@ -110,9 +146,21 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log("Data refresh requested (handled by real-time listeners)");
   };
 
+  const updateTaskStatus = (key: string, status: TaskStatus['status']) => {
+    setTaskState(prev => ({
+      ...prev,
+      [key]: {
+        ...(prev[key] || { notes: '', date: '' }),
+        status
+      }
+    }));
+    // Best-effort persistence to Firestore
+    persistTaskStatus(key, status).catch(err => console.warn("Failed to persist task status:", err));
+  };
+
   return (
     <DataContext.Provider value={{
-      roadmap: { deals },
+      roadmap: { deals: mergedDeals },
       taskStatus,
       documents,
       checklist,
@@ -121,7 +169,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       usingFallback: false,
       lastSynced,
       refreshData,
-      seedData: handleSeed
+      seedData: handleSeed,
+      updateTaskStatus,
+      currentDeptView,
+      setCurrentDeptView,
+      currentDealFilter,
+      setCurrentDealFilter
     }}>
       {children}
     </DataContext.Provider>

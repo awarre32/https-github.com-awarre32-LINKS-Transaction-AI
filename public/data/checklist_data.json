@@ -1,0 +1,417 @@
+[
+  {
+    "task": "Real Estate/Development/Construction",
+    "date": "0.0",
+    "status": "Pending"
+  },
+  {
+    "task": "Equip Ordered",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Equipment Arrival",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Signage Installed",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Equipment install complete",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Digital menu boards installed and operational ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Dev punch list created",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "POS - Double-check POS is online, pay stations are processing credit card payments, etc.",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "POS - Evaluate POS and CC functioning ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "POS - Paystations are online & communicating with POS",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "POS - Tunnel controller timing and wash packages setup",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Ops walk - Ops punch list",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Punch list complete",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Finance",
+    "date": "0.0",
+    "status": "Pending"
+  },
+  {
+    "task": " Identify Site identifier #'s to be used",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Create SPE (Legal Entity)",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": " Apply for FEIN ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Set Up Bank Account",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Set Up Site In AIS",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Create merchant accounts (Card Connect (Clover) /WorldPay)",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": " Review & determine state & county sales tax rules",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Set up Credit Card Credentials",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Operations",
+    "date": "0.0",
+    "status": "Pending"
+  },
+  {
+    "task": "Site ordering portals (Amazon, Grainger, Etc)",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Apply for Business License",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Business License received and sent to the site",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Start utility service",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Reclaim pumped and functional ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Alarm system installed",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Chemical Inventory Ordering   ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Building Service Vendor Plan - Landscaping, salt, etc",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Uniform Plan completed",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Order New Site Packet (Uniforms, Towels, Bottle, etc.)",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "OPEX - Site Standard Processes Training Ops Manager",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "OPEX -Test free wash codes ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "OPEX - Confirm marketing materials arrived to site ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Ops Support - Order dumpster from local company that services location.",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "OPS - Create alarm codes for sites",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Safety Training",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Selling, lot maintenance, loading, etc. training",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Store Opening Links Branded",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "HR",
+    "date": "0.0",
+    "status": "Pending"
+  },
+  {
+    "task": "Valid Insurance Coverage/COI",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Complete HRM Company Code Implementation",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Recruit GM",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Recruit AGM",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Recruit CSA (Staff)",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Finalize overall Staffing Plan",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Onboarding - Staff",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Employee Interviews",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Once first employee hired, alert Workmen's Compensation broker of start date",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Order compliance posters ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Executed Offer Letters and comp agreements",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Complete new hire orientation (includes overview of benefits and policies)",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Marketing",
+    "date": "0.0",
+    "status": "Pending"
+  },
+  {
+    "task": "Confirm site address & phone number",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Create location website page ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Place location page under \"Coming Soon\" menu tab ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Design banners",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Set up Yelp page",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Turn on FB ads ",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Post opening date on Google Business Page",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Create Electronic Road Sign and/or Digital Menu opening content",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Ensure location page has \"Now Open\" verbiage",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Post \"Now Open\" on Google Business Page",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "IT/Ops",
+    "date": "0.0",
+    "status": "Pending"
+  },
+  {
+    "task": "IT Package - Shipped to site",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Cameras - Contract signed for NVRs and cameras",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Cameras - NVRs & cameras ordered for site",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Cameras - All cameras physically mounted and cabled",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Cameras - Cameras visible through NVR/portal",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Cameras - All cameras properly oriented and named",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Cabling - Low voltage cabling complete",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Office - Back up internet solution",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Office - Mgr PC and Printer installed and functional on internet",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Office - Create store email accounts",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Office - SharePoint - Store-level access configured",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Internet - Identify internet provider",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Internet - Modem installed",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Internet - Test internet access and verify speed matches contracted plan",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Internet - WiFi network name and password confirmed",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Telecom - Store Phone",
+    "date": null,
+    "status": "Pending"
+  },
+  {
+    "task": "Internet - Share internet provider portal info with AP for payment",
+    "date": null,
+    "status": "Pending"
+  }
+]

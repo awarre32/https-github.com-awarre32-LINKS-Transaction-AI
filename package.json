@@ -6,22 +6,31 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:firestore": "ts-node scripts/seedFirestore.ts",
+    "import:firestore": "ts-node scripts/import_json_to_firestore.ts",
+    "export:json": "ts-node scripts/generate_json_from_firestore.ts"
   },
   "dependencies": {
     "@google/genai": "^1.31.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/typography": "^0.5.19",
+    "dotenv": "^17.2.3",
     "firebase": "^11.0.1",
+    "firebase-admin": "^13.6.0",
     "lucide-react": "^0.555.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "recharts": "^3.5.1"
+    "recharts": "^3.5.1",
+    "ts-node": "^10.9.2",
+    "ws": "^8.18.3",
+    "xhr2": "^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.22",
+    "firebase-tools": "^14.27.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "typescript": "~5.8.2",

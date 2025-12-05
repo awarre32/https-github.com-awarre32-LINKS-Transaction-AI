@@ -8,6 +8,9 @@ export interface TaskStatus {
   status: 'Completed' | 'In Progress' | 'Not Started' | 'Blocked';
   date: string;
   notes: string;
+  department?: DepartmentView;
+  targetDate?: string;
+  updatedBy?: string;
 }
 
 export interface TaskMap {
@@ -15,6 +18,7 @@ export interface TaskMap {
 }
 
 export interface DocumentData {
+  id?: string; // Optional ID for Firestore docs
   filename: string;
   deal: string | null;
   needs_ocr: boolean;
@@ -22,6 +26,8 @@ export interface DocumentData {
   text_snippet: string;
   full_text?: string;
   type?: 'PSA' | 'ESA' | 'Title' | 'Survey' | 'Financial' | 'Other';
+  url?: string;
+  uploadedAt?: string;
 }
 
 export interface ChecklistItem {
@@ -54,3 +60,5 @@ export enum AppView {
   SITES = 'SITES',
   INTEGRATION = 'INTEGRATION'
 }
+
+export type DepartmentView = 'All' | 'Exec' | 'Ops' | 'Legal' | 'Finance' | 'HR' | 'Dev' | 'Other';

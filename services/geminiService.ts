@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { DocumentData, DealRoadmap, TaskMap, ChecklistItem, MondayItem } from "../types";
+import { DocumentData, DealRoadmap, TaskMap, ChecklistItem, MondayItem, DepartmentView } from "../types";
 
 // Initialize the client
 // accessing via import.meta.env for Vite compatibility
@@ -17,6 +17,8 @@ interface AIContextData {
   documents: DocumentData[];
   checklist: ChecklistItem[];
   monday: MondayItem[];
+  currentDealFilter?: string | 'All';
+  currentDeptView?: DepartmentView;
 }
 
 /**
@@ -31,21 +33,35 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
       };
     }
 
-    const { documents, taskStatus, roadmap, checklist, monday } = context;
+    const { documents, taskStatus, roadmap, checklist, monday, currentDealFilter = 'All', currentDeptView = 'All' } = context;
 
     // 1. Retrieval Step (Keyword matching)
     const lowerQuery = userQuery.toLowerCase();
     const queryTerms = lowerQuery.split(' ').filter(term => term.length > 3); // Simple term extraction
     
     // A. Filter Documents (VDR)
-    const relevantDocs = documents.filter(doc => {
+    const docScore = (doc: DocumentData) => {
       const docStr = `${doc.filename} ${doc.deal || ''} ${doc.summary} ${doc.text_snippet}`.toLowerCase();
-      return docStr.includes(lowerQuery) || queryTerms.some(term => docStr.includes(term));
-    }).slice(0, 8); // Top 8 docs
+      let score = 0;
+      if (currentDealFilter !== 'All' && doc.deal === currentDealFilter) score += 5;
+      queryTerms.forEach(term => { if (docStr.includes(term)) score += 1; });
+      if (docStr.includes(lowerQuery)) score += 3;
+      return score;
+    };
+    const relevantDocs = documents
+      .map(d => ({ d, score: docScore(d) }))
+      .filter(x => x.score > 0 || currentDealFilter === 'All')
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map(x => x.d);
 
     // B. Retrieve Task Context (Diligence/Closing/Ops)
     const relevantTasks = Object.entries(taskStatus)
-        .filter(([key]) => key.toLowerCase().includes(lowerQuery) || queryTerms.some(term => key.toLowerCase().includes(term)))
+        .filter(([key, val]) => {
+          if (currentDealFilter !== 'All' && !key.startsWith(currentDealFilter)) return false;
+          if (currentDeptView !== 'All' && (val.department || 'Other') !== currentDeptView) return false;
+          return key.toLowerCase().includes(lowerQuery) || queryTerms.some(term => key.toLowerCase().includes(term));
+        })
         .map(([key, val]) => `- ${key}: ${val.status} (Date: ${val.date}) ${val.notes ? `[Note: ${val.notes}]` : ''}`)
         .slice(0, 15);
 
@@ -97,9 +113,14 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
       - If you infer a deal from a filename/site name, state it is an inference.
       - Do not provide legal advice, only summaries.
       - If asked for a table or list, use clean Markdown.
+      - Use the department perspective provided: ${currentDeptView}. Frame action items for that team when relevant.
     `;
 
     const contextString = `
+      === CONTEXT ===
+      Department perspective: ${currentDeptView}
+      Deal focus: ${currentDealFilter}
+
       === DEAL ROADMAP (OFFICIAL) ===
       ${JSON.stringify(roadmap.deals)}
 
@@ -149,4 +170,27 @@ export const queryTransactionAI = async (userQuery: string, context: AIContextDa
       evidence: []
     };
   }
+};
+
+export type DealTool =
+  | 'verifyTitle'
+  | 'summarizeESA'
+  | 'missingDocs';
+
+const toolPrompts: Record<DealTool, string> = {
+  verifyTitle: "Verify title commitments and list exceptions or gaps.",
+  summarizeESA: "Summarize environmental/ESA findings and flag issues.",
+  missingDocs: "List missing or critical documents for this deal (PSA, title, survey, ESA, financials)."
+};
+
+/**
+ * Tool helper for per-deal AI actions (title, ESA, missing docs).
+ */
+export const runDealTool = async (
+  tool: DealTool,
+  dealName: string,
+  context: AIContextData
+): Promise<ChatResponse> => {
+  const prompt = `Deal: ${dealName}\nTask: ${toolPrompts[tool]}\nDepartment perspective: ${context.currentDeptView || 'All'}\nFocus only on this deal unless evidence shows otherwise.`;
+  return queryTransactionAI(prompt, { ...context, currentDealFilter: dealName });
 };

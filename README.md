@@ -1,101 +1,89 @@
 # LINKS Transaction AI
 
-A React + TypeScript application for managing M&A transactions, powered by Firebase and Gemini AI.
+Internal cockpit + AI assistant for Links Car Wash deals. React + Vite + TypeScript with Firebase (Auth/Firestore/Storage/Functions/Hosting) and Gemini for RAG.
 
-## Branding
+## Env Setup
 
-This project uses the official **Links Car Wash** branding.
-
-### Brand Colors
-- **Primary Green:** `#006747` (Buttons, Headers, Accents)
-- **Dark Green:** `#052e22` (Sidebar, Dark Backgrounds)
-- **Background:** `#F5F7FA` (App Canvas)
-- **White:** `#FFFFFF` (Cards, Text on Green)
-
-### Assets
-Logos are stored in `src/assets/` and `public/`.
-- `links-logo.png` (Standard Color)
-- `links-logo-white.png` (White for dark backgrounds)
-- `links-logo-transparent.png` (High-res transparent)
-
-**Note:** Do not modify the logos or colors without checking the brand guidelines.
-
-## Architecture
-
-This project has been refactored to use **Firebase** as the single source of truth for all data, replacing the previous Google Cloud Storage (JSON) and GitHub integration.
-
-### Tech Stack
-- **Frontend:** React, Vite, TypeScript, Tailwind CSS
-- **Database:** Firebase Firestore (Real-time updates)
-- **AI:** Google Gemini (via Firebase Extension or direct API)
-- **State Management:** React Context (DataContext)
-
-### Data Sources
-All data is stored in Firestore collections:
-- `deals` (Roadmap)
-- `tasks` (Diligence & Closing tasks)
-- `documents` (VDR index)
-- `checklist` (Integration templates)
-- `sites` (Monday.com site list)
-
-## Setup & Configuration
-
-### 1. Environment Variables
-Create a `.env` file in the root directory (copy `.env.example` if available) and add your Firebase and Gemini credentials:
-
-```env
-# Firebase Configuration
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-
-# Gemini AI
-VITE_GEMINI_API_KEY=your_gemini_api_key
-
-# Optional: Use Local Emulators
+Create `.env` with your Firebase + Gemini keys (copy from `.env.example`):
+```
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=links-transaction-ai
+VITE_FIREBASE_STORAGE_BUCKET=links-transaction-ai.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+VITE_GEMINI_API_KEY=...
+# set to true when using emulators
 # VITE_USE_EMULATOR=true
 ```
 
-### 2. Install Dependencies
-```bash
+Install deps:
+```
 npm install
 ```
 
-### 3. Run Development Server
-```bash
-npm run dev
+Run dev (optionally with emulators):
+```
+# start emulators in another shell: firebase emulators:start --only firestore,auth,storage
+VITE_USE_EMULATOR=true npm run dev
 ```
 
-### 4. Seed the Database
-When you first run the app, if your Firestore is empty, you will see a **"Seed Database"** button in the sidebar. Click it to populate Firestore with the initial mock data (deals, tasks, etc.).
+Build / deploy hosting:
+```
+npm run build
+firebase deploy --only hosting
+```
 
-## Testing with Emulators
+## Firestore as source of truth
+Collections:
+- `deals` – roadmap & stats
+- `tasks` – diligence/closing/integration tasks (keys match `<Deal>_<Phase>_<Task>`)
+- `documents` – VDR index (ingested from Storage)
+- `checklist` – template integration tasks
+- `sites` – site-level status
 
-1. Ensure you have the Firebase CLI installed (`npm install -g firebase-tools`).
-2. Run emulators:
-   ```bash
-   firebase emulators:start
-   ```
-3. In a separate terminal, run the app with emulator mode enabled:
-   ```bash
-   VITE_USE_EMULATOR=true npm run dev
-   ```
+Dept/deal filters are non-blocking: all views stay visible; filters only narrow the data.
 
-## Folder Structure
+## Scripts (run with service account via GOOGLE_APPLICATION_CREDENTIALS)
+- `npm run import:firestore` – load the 5 seed JSONs from `public/data` into Firestore.
+- `npm run export:json` – snapshot Firestore back into `public/data`.
+- `npm run seed:firestore` – legacy seed helper (optional).
 
-- `src/components`: UI components (Dashboard, TaskBoard, DocumentChat, etc.)
-- `src/contexts`: DataContext handling Firestore subscriptions.
-- `src/services`:
-  - `dataService.ts`: Firestore helper functions.
-  - `geminiService.ts`: AI logic.
-  - `seedService.ts`: Database seeding utility.
-- `src/types.ts`: TypeScript interfaces.
+## Functions (Node 18, in /functions)
+- Storage trigger `ingestVdrFile`: watches `vdr/**`, parses PDFs, classifies, writes to `documents`.
+- Firestore trigger `updateDealStatsOnTaskWrite`: recomputes per-deal task stats.
+- Scheduled `recomputeAllDealStatsNightly`: nightly safety recompute.
 
-## Migration Notes
+To deploy functions:
+```
+cd functions
+npm install
+npm run build
+firebase deploy --only functions
+```
 
-- **GCS Removed:** The app no longer fetches JSON files from Google Cloud Storage.
-- **GitHub Removed:** No Git logic exists in the client.
-- **Real-time:** Updates to Firestore are reflected immediately in the UI.
+## VDR ingestion flow
+1) Sync local Dropbox VDR to Storage under `vdr/` (e.g., `vdr/richs/...`, `vdr/slappys/...`).
+2) `ingestVdrFile` extracts text (pdf-parse), infers deal/type, writes metadata to `documents`.
+
+## AI / Gemini
+- `services/geminiService.ts` implements retrieval with deal/department context.
+- Deal cards include AI actions: Verify Title, Summarize ESA, Missing Docs.
+- DocumentChat sends deal/dept context and returns evidence-backed answers.
+
+## UI
+- Sidebar with enlarged Links logo.
+- Dept/Deal filters at top of main content; filters never block views.
+- Dashboard: readiness, blockers, charts, AI deal tools.
+- TaskBoard: department/deal-filtered tasks with inline status updates (persist to Firestore).
+- Sites: per-deal open task counts for selected department.
+- Documents/Chat: role-aware AI responses with evidence.
+
+## Seeding live data (hosted JSON → Firestore)
+- Cloud Function `seedFromHostedJson` pulls the 5 canonical JSON files from Hosting (`/data/*.json`) and writes them into Firestore with sanitized IDs and trimmed document metadata.
+- Endpoint (secured by key): `https://us-central1-links-transaction-ai.cloudfunctions.net/seedFromHostedJson?key=links-seed`
+- Run after deploying functions to backfill: visit the URL once, or call via curl.
+
+## BigQuery analytics layer
+- See `bigquery/README_BIGQUERY.md` for Firestore→BigQuery streaming expectations, schema/materialized views, embeddings, and BigQuery ML models (deal risk, task blockage).
+- Apply the SQL files in `bigquery/` via `bq query --use_legacy_sql=false < file.sql` in the order listed in that README.

@@ -4,8 +4,9 @@ import { ParsedTask, TaskStatus } from '../types';
 import { Filter, CheckCircle, Clock } from 'lucide-react';
 
 const TaskBoard: React.FC = () => {
-  const { taskStatus, roadmap } = useData();
+  const { taskStatus, roadmap, updateTaskStatus, currentDeptView, currentDealFilter } = useData();
   const [selectedDeal, setSelectedDeal] = useState<string>('All');
+  const statusOptions: TaskStatus['status'][] = ['Not Started', 'In Progress', 'Blocked', 'Completed'];
 
   // Parse tasks
   const allTasks: ParsedTask[] = (Object.entries(taskStatus) as [string, TaskStatus][]).map(([key, val]) => {
@@ -27,9 +28,13 @@ const TaskBoard: React.FC = () => {
     };
   });
 
-  const filteredTasks = selectedDeal === 'All' 
-    ? allTasks 
-    : allTasks.filter(t => t.deal_name === selectedDeal);
+  const filteredByLocal = selectedDeal === 'All' ? allTasks : allTasks.filter(t => t.deal_name === selectedDeal);
+  const filteredTasks = filteredByLocal.filter(t => {
+    if (currentDealFilter !== 'All' && t.deal_name !== currentDealFilter) return false;
+    const dept = taskStatus[t.original_key]?.department || 'Other';
+    if (currentDeptView !== 'All' && dept !== currentDeptView) return false;
+    return true;
+  });
 
   // Group by Phase
   const phases = ['R-1', 'R-2', 'R-3', 'R-4', 'R-Closing', 'CHK', 'Ops'];
@@ -95,10 +100,21 @@ const TaskBoard: React.FC = () => {
                     phaseTasks.map((task, idx) => (
                       <div key={idx} className="bg-white border border-gray-100 rounded p-3 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-2">
-                          <span className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-medium ${getStatusColor(task.status)}`}>
-                            {getStatusIcon(task.status)}
-                            {task.status}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 font-medium ${getStatusColor(task.status)}`}>
+                              {getStatusIcon(task.status)}
+                              {task.status}
+                            </span>
+                            <select
+                              className="text-xs border border-gray-200 rounded px-1 py-0.5 text-gray-700"
+                              value={task.status}
+                              onChange={(e) => updateTaskStatus(task.original_key, e.target.value as TaskStatus['status'])}
+                            >
+                              {statusOptions.map(opt => (
+                                <option key={opt} value={opt}>{opt}</option>
+                              ))}
+                            </select>
+                          </div>
                           {task.date && <span className="text-xs text-gray-500">{task.date}</span>}
                         </div>
                         <p className="text-sm font-medium text-gray-800 leading-tight mb-2">{task.task_name}</p>
